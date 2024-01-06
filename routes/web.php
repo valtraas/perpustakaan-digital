@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BukuController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,29 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+
+// * Authentikasi
+Route::controller(AuthController::class)->group(function () {
+    // * register
+    Route::get('/register', 'register')->name('register.index');
+    Route::post('/register', 'registerUser')->name('register.user');
+
+    //* login
+    Route::get('/', 'index')->name('login.index');
+    Route::post('login', 'login')->name('login.auth');
+    Route::post('logout', 'logout')->name('logout');
+});
+
+// * Dashboard
+Route::prefix('/dashboard-perpustakaan')->middleware('auth')->group(function () {
+
+    // * dashboard-chart
+    Route::get('', function () {
+        return view('layouts.templates.dashboard');
+    })->name('dashboard');
+
+    // * Daftar Buku
+    Route::resource('/daftar-buku', BukuController::class);
+
 });
