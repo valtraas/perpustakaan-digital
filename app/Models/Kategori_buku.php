@@ -11,6 +11,9 @@ class Kategori_buku extends Model
 
     protected $guarded = ['id'];
     protected $table = 'kategori_buku';
-    
-    
+
+    function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

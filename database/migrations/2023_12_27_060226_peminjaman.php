@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('peminjaman',function(Blueprint $table){
             $table->id();
-            $table->foreignId('users_id')->constrained(table:'users');
+            $table->foreignId('user_id')->constrained(table: 'users');
             $table->foreignId('buku_id')->constrained(table:'buku');
             $table->date('tgl_peminjaman');
             $table->date('tgl_pengembalian');

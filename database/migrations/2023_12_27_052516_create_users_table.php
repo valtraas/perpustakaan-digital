@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->text('alamat');
-            $table->foreignId('roles_id')->nullable()->constrained(table: 'roles');
+            $table->foreignId('roles_id')->default(3)->constrained(table: 'roles');
+            $table->string('photo')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

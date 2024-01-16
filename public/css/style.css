@@ -834,6 +834,10 @@ h6 {
   color: #ff771d;
   background: #ffecdf;
 }
+.dashboard .rating-card .card-icon {
+  color: #FEC40E;
+  background: #ffecdf;
+}
 
 /* Activity */
 .dashboard .activity {

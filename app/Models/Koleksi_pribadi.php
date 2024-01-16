@@ -10,7 +10,7 @@ class Koleksi_pribadi extends Model
     use HasFactory;
     protected $guarded =['id'];
     protected $table = 'koleksi_pribadi';
-    protected $with = ['users','buku'];
+    protected $with = ['buku'];
 
     public function users(){
         return $this->belongsTo(User::class);

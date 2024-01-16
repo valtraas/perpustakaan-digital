@@ -11,10 +11,22 @@ class Buku extends Model
 
     protected $table = 'Buku';
     protected $guarded = ['id'];
-    // protected $with =['peminjaman'];
+    // protected $with = ['peminjaman', 'ulasan_buku'];
 
     public function getRouteKeyName()
     {
         return 'slug';
     }
+
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class);
+    }
+
+    public function ulasan_buku()
+    {
+        return $this->hasMany(Ulasan_buku::class);
+    }
+
+    
 }

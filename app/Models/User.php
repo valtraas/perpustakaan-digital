@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $guarded = ['id'];
-    protected $with = ['roles'];
+    // protected $with = ['roles', 'peminjam'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -35,6 +35,16 @@ class User extends Authenticatable
         return $this->belongsTo(Roles::class);
     }
 
+    public function peminjam()
+    {
+        return $this->hasMany(Peminjaman::class);
+    }
+
+    public function koleksi()
+    {
+        return $this->hasMany(Koleksi_pribadi::class);
+    }
+
     /**
      * The attributes that should be cast.
      *
@@ -44,4 +54,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'username';
+    }
 }

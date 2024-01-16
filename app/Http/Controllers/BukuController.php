@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buku;
+use App\Models\Kategori_buku;
+use App\Models\Kategori_buku_relasi;
+use App\Models\Ulasan_buku;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
@@ -25,7 +28,8 @@ class BukuController extends Controller
     public function create()
     {
         return view('buku.create-buku', [
-            'title' => 'Tambah Buku'
+            'title' => 'Tambah Buku',
+            'kategori' => Kategori_buku::all()
         ]);
     }
 
@@ -38,7 +42,8 @@ class BukuController extends Controller
             'judul' => ['required'],
             'penulis' => 'required',
             'penerbit' => 'required',
-            'tahun_terbit' => 'required'
+            'tahun_terbit' => 'required',
+            'cover' => ['image', 'required']
         ]);
         // * membuat slug dari judul
         $slug = $validated['slug'] = Str::slug($validated['judul']);
@@ -49,17 +54,34 @@ class BukuController extends Controller
             $counter++;
         }
         $validated['slug'] = $slug;
+        $validated['cover'] = $request->file('cover')->store('cover-buku');
+        $buku = Buku::create($validated);
 
-        Buku::create($validated);
+        $kategori = $request->kategori;
+        foreach ($kategori as $kategori_id) {
+            Kategori_buku_relasi::create(
+                [
+                    'buku_id' => $buku->id,
+                    'kategori_id' => $kategori_id
+                ]
+            );
+        }
+
         return redirect()->route('daftar-buku.index')->with('success', 'Berhasil menambah data');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Buku $buku)
+    public function show(Buku $daftar_buku)
     {
-        //
+        $ulasan = Ulasan_buku::where('buku_id', $daftar_buku->id)->paginate(2);
+        return view('buku.detail', [
+            'title' => 'Detail Buku',
+            'buku' => $daftar_buku,
+            'ulasan' => $ulasan,
+            'kategori' => Kategori_buku_relasi::where('buku_id', $daftar_buku->id)->get()
+        ]);
     }
 
     /**

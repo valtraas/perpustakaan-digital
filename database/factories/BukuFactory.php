@@ -23,7 +23,8 @@ class BukuFactory extends Factory
             'slug' => Str::slug($judul),
             'penulis' => $this->faker->name(),
             'penerbit' => $this->faker->company(),
-            'tahun_terbit' => $this->faker->year()
+            'tahun_terbit' => $this->faker->year(),
+            'cover' => 'cover'
         ];
     }
 }

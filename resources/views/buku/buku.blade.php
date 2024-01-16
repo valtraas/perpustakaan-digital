@@ -29,8 +29,10 @@
                             <td>{{ $item->tahun_terbit }}</td>
                             <td>
                                 <div class="d-flex gap-3">
+
                                     <div>
-                                        <a href="" class="btn btn-sm btn-primary">
+                                        <a href="{{ route('daftar-buku.show', ['daftar_buku' => $item->slug]) }}"
+                                            class="btn btn-sm btn-primary">
                                             <i class="bi bi-eye"></i>
                                         </a>
                                     </div>
@@ -50,8 +52,13 @@
                                             @csrf
                                             @method('DELETE')
                                         </form>
-
                                     </div>
+
+                                    {{-- end admin-petugas --}}
+                                    {{-- non -admin --}}
+                                    
+
+                                    {{-- end non -admin --}}
                                 </div>
                             </td>
                         </tr>
@@ -65,6 +72,7 @@
 
     <script>
         $(document).ready(function() {
+            // delete buku
             $('.deleteBukuBtn').click(function() {
                 const buku = $(this).data('slug');
                 Swal.fire({
@@ -82,6 +90,27 @@
                     }
                 });
             })
+
+            // pinjam buku
+            $('.pinjamBukubtn').click(function() {
+                const buku = $(this).data('buku');
+                Swal.fire({
+                    title: 'Anda yakin ?',
+                    text: 'Buku yang dipinjam harus dikembalikan 7 hari setelah peminjaman !',
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Pinjam buku'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const pinjamBukuForm = $(`.pinjamBukuForm[data-buku="${buku}"]`);
+                        console.log(pinjamBukuForm);
+                        pinjamBukuForm.submit();
+                    }
+                });
+            })
+
         })
     </script>
 @endsection

@@ -12,9 +12,10 @@ class Roles extends Model
     protected $table = 'roles';
     protected $guraded = ['id'];
 
-    protected $with = ['users'];
+    // protected $with = ['user'];
 
-    public function users(){
-        return $this->hasMany('users');
+    public function user()
+    {
+        return $this->hasMany(User::class);
     }
 }

@@ -10,7 +10,7 @@
 
               <div class="d-flex justify-content-center py-4">
                 <a href="{{ route('login.index') }}" class="logo d-flex align-items-center w-auto">
-                  <img src="{{ asset('image/smk.png') }}" alt="">
+                  <img src="{{ asset('image/logo.png') }}" alt="">
                   <span class="d-none d-lg-block">Perpustakaan digital</span>
                 </a>
               </div><!-- End Logo -->
@@ -45,7 +45,7 @@
                       <button class="btn btn-primary w-100" type="submit">Login</button>
                     </div>
                     <div class="col-12">
-                      <p class="small mb-0">Tidak punya akun? <a href="{{ route('register.index') }}">buat akun baru</a></p>
+                      <p class="small mb-0">Belum punya akun? <a href="{{ route('register.index') }}">buat akun baru</a></p>
                     </div>
                   </form>
 
