@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('penerbit');
             $table->integer('tahun_terbit');
             $table->string('cover');
+            $table->foreignId('kategori_buku_id')->nullable()->constrained(table: 'kategori_buku')->nullOnDelete();
             $table->timestamps();
         });
     }

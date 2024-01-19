@@ -9,6 +9,7 @@
             <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
                 <div class="d-flex justify-content-center py-4">
+                
                     <a href="{{ route('login.index') }}" class="logo d-flex align-items-center w-auto">
                       <img src="{{ asset('image/logo.png') }}" alt="">
                       <span class="d-none d-lg-block">Perpustakaan digital</span>
@@ -24,32 +25,35 @@
                     <p class="text-center small">Masukann data anda di bawah ini </p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate action="{{ route('register.user') }}" method="POST">
+                  <form class="row g-3 "  action="{{ route('register.user') }}" method="POST">
                     @csrf
                     <div class="col-12">
                       <label for="yourName" class="form-label">Nama lengkap</label>
-                      <input type="text" name="nama_lengkap" class="form-control" id="yourName" required name="nama_lengkap">
-                      <div class="invalid-feedback">Mohon, masukan nama anda!</div>
+                      <input type="text" name="nama_lengkap" class="form-control" id="yourName" required name="nama_lengkap" required>
+                      @error('nama_lengkap')
+                          <small class="text-danger">{{ $message }}</small>
+                      @enderror
                     </div>
 
                     <div class="col-12">
                       <label for="yourEmail" class="form-label">Email</label>
-                      <input type="email" name="email" class="form-control" id="yourEmail" required name="email">
-                      <div class="invalid-feedback">Mohon masukan email dengna benar!</div>
+                      <input type="email" name="email" class="form-control" id="yourEmail" required name="email" required>
+                      @error('email')
+                          <small class="text-danger">{{ $message }}</small>
+                      @enderror
                     </div>
 
                     <div class="col-12">
                       <label for="yourUsername" class="form-label">Username</label>
-                      <div class="input-group has-validation">
-                        <input type="text" name="username" class="form-control" id="yourUsername" required name="username">
-                        <div class="invalid-feedback">Mohon masukan username.</div>
-                      </div>
+                        <input type="text" name="username" class="form-control" id="yourUsername" required name="username" required>
+                        @error('username')
+                          <small class="text-danger">{{ $message }}</small>
+                      @enderror
                     </div>
 
                     <div class="col-12">
                       <label for="yourPassword" class="form-label">Password</label>
                       <input type="password" name="password" class="form-control" id="yourPassword" required name="password">
-                      <div class="invalid-feedback">Mohon masukan password !</div>
                     </div>
                     <div class="col-12">
                         <label for="yourUsername" class="form-label">Alamat</label>
@@ -57,7 +61,6 @@
                           <textarea type="text" class="form-control" id="yourUsername" required name="alamat">
                             
                           </textarea>
-                          <div class="invalid-feedback">Mohon masukan alamat.</div>
                         </div>
                       </div>
 
@@ -72,13 +75,7 @@
                 </div>
               </div>
 
-              <div class="credits">
-                <!-- All the links in the footer should remain intact. -->
-                <!-- You can delete the links only if you purchased the pro version. -->
-                <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-              </div>
+             
 
             </div>
           </div>

@@ -16,4 +16,9 @@ class Kategori_buku extends Model
     {
         return 'slug';
     }
+
+    public function buku()
+    {
+        return $this->hasMany(Buku::class);
+    }
 }

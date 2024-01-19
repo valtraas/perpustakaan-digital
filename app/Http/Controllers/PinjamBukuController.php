@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buku;
+use App\Models\Kategori_buku;
 use App\Models\Kategori_buku_relasi;
 use App\Models\Koleksi_pribadi;
 use App\Models\Peminjaman;
@@ -19,7 +20,9 @@ class PinjamBukuController extends Controller
     {
         return view('peminjam.daftar-buku', [
             'title' => 'Daftar Buku',
-            'buku' => Buku::all()
+            'buku' => Buku::with('peminjaman')->filter(request(['kategori']))->get(),
+            'kategori' => Kategori_buku::all()
+
         ]);
     }
 
@@ -71,7 +74,6 @@ class PinjamBukuController extends Controller
             'title' => 'Detail buku',
             'buku' => $buku,
             'ulasan' => $ulasan,
-            'kategori' => Kategori_buku_relasi::where('buku_id', $buku->id)->get()
 
         ]);
     }

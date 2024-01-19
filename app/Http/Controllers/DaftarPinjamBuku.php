@@ -17,13 +17,10 @@ class DaftarPinjamBuku extends Controller
         $batas = Peminjaman::with('buku')->where('tgl_pengembalian', '<=',  now('Asia/Jakarta')->format('Y-m-d'))->get();
         if ($batas->count() !== 0) {
             session()->flash('warning', $batas->count());
-        } else {
-            $batas = Peminjaman::with('buku')->get();
-            // dd($batas);
-        }
+        } 
         return view('peminjam.buku-dipinjam', [
             'title' => 'Daftar buku yang dipinjam',
-            'buku' => $batas
+            'buku' => Peminjaman::with('buku')->get()
         ]);
     }
 

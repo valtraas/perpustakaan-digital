@@ -46,7 +46,7 @@ Route::prefix('/dashboard-perpustakaan')->middleware('auth')->group(function () 
     Route::get('', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/graph', [DashboardController::class, 'graph'])->name('dashboard.graph');
 
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['admin'])->group(function () {
 
         // * Daftar Buku
         Route::resource('/daftar-buku', BukuController::class);

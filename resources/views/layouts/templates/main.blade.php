@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Pages / Login - NiceAdmin Bootstrap Template</title>
+    <title>Perpustakaan Digital</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -27,6 +27,9 @@
     <link href="{{ asset('/vendor/quill/quill.bubble.css ') }}" rel="stylesheet">
     <link href=" {{ asset('/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
     <link href=" {{ asset('/vendor/simple-datatables/style.css') }}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
 
     <!-- Template Main CSS File -->
     <link href=" {{ asset('css/style.css') }}" rel="stylesheet">

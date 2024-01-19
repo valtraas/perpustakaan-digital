@@ -80,10 +80,10 @@
 
           <div class="d-flex align-items-center">
             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-              <i class="bx bxs-category-alt"></i>
+              <i class="bi bi-journal-bookmark-fill"></i>
             </div>
             <div class="ps-3">
-              <h6>{{ $kategori->count() }}</h6>
+              <h6>{{ $koleksi->count() }}</h6>
             </div>
           </div>
         </div>
@@ -101,10 +101,10 @@
 
           <div class="d-flex align-items-center">
             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-              <i class="ri-contacts-book-2-fill"></i>
+              <i class="bi bi-journal-arrow-down"></i>
             </div>
             <div class="ps-3">
-              <h6>{{ $peminjam->count() }}</h6>
+              <h6>{{ $buku_dipinjam->count() }}</h6>
 
             </div>
           </div>
@@ -114,41 +114,21 @@
 
     </div><!-- End Customers Card -->
     <!-- Customers Card -->
-    <div class="col-xxl-6 col-md-6">
-
-      <div class="card info-card customers-card">
-
-        <div class="card-body">
-          <h5 class="card-title">Buku yang sedang di pinjam </h5>
-
-          <div class="d-flex align-items-center">
-            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-              <i class="ri-contacts-book-2-fill"></i>
-            </div>
-            <div class="ps-3">
-              <h6>{{ $peminjam->count() }}</h6>
-
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </div><!-- End Customers Card -->
+    
     <!-- Customers Card -->
-    <div class="col-xxl-6 col-md-6">
+    <div class="col-xxl-12 col-md-4">
 
-      <div class="card info-card customers-card">
+      <div class="card info-card info-card">
 
         <div class="card-body">
           <h5 class="card-title">Buku yang tersedia </h5>
 
           <div class="d-flex align-items-center">
             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-              <i class="ri-contacts-book-2-fill"></i>
+              <i class="bi bi-journal-check"></i>
             </div>
             <div class="ps-3">
-              <h6>{{ $peminjam->count() }}</h6>
+              <h6>{{ $buku_tersedia }}</h6>
 
             </div>
           </div>
@@ -191,7 +171,8 @@
         function drawChart(data) {
             let options = {
                 chart: {
-                    type: 'line',
+                  height: 350,
+                    type: 'area',
                     zoom: {
                         enabled: false,
                     },

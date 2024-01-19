@@ -1,5 +1,35 @@
 @extends('layouts.templates.dashboard')
 @section('content-dashboard')
+<div class="card p-2">
+        <p class="card-title">Filter</p>
+        <form class="row g-3" action="{{ route('daftar-buku.index') }}">
+            <div class="col-md-6 ">
+                <select class="form-select" aria-label="Default select example" name="kategori">
+                    <option selected value="">Kategori</option>
+                    @foreach ($kategori as $kategori)
+                    <option value="{{ $kategori->nama }}" {{ (request('kategori') == $kategori->nama) ? 'selected' : '' }}>{{ $kategori->nama }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-6 mb-3 ">
+                <select class="form-select" aria-label="Default select example" name="tahun_terbit">
+                    <option selected value="">Tahun terbit</option>
+                    @foreach ($tahun_terbit as $item)
+                    <option value="{{ $item }}" {{ (request('tahun_terbit') == $item) ? 'selected' : '' }}>{{ $item }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-filter"></i>
+                </button>
+                <button type="reset" class="btn btn-secondary" id="reset-filter">
+                    <i class="ri-arrow-go-back-fill"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
     <div class="card">
         <div class="card-body pt-3">
 
@@ -72,6 +102,10 @@
 
     <script>
         $(document).ready(function() {
+            $('#reset-filter').click(function() {
+                window.location.href =
+                "{{ route('daftar-buku.index') }}"; // Arahkan ke URL awal tanpa query string
+            });
             // delete buku
             $('.deleteBukuBtn').click(function() {
                 const buku = $(this).data('slug');

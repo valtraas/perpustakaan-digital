@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Buku;
+use App\Models\Kategori_buku;
 use App\Models\Peminjaman;
 use App\Models\Roles;
 use Illuminate\Database\Seeder;
@@ -34,7 +35,11 @@ class DatabaseSeeder extends Seeder
         ]);
       
 
-        Buku::factory(10)->create();
+        // Buku::factory(10)->create();
+        // Kategori_buku::create([
+        //     'nama' => 'Neptune',
+        //     'slug' => 'neptune'
+        // ]);
         // Peminjaman::factory(5)->create();
     }
 }

@@ -16,7 +16,7 @@ class Admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->roles_id !== 1) {
+        if (Auth::user()->roles_id !== 1 && Auth::user()->roles_id !== 2) {
             abort(403, 'Tidak dapat mengakses halaman ini');
         }
         return $next($request);

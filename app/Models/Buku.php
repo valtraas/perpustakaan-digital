@@ -11,7 +11,7 @@ class Buku extends Model
 
     protected $table = 'Buku';
     protected $guarded = ['id'];
-    // protected $with = ['peminjaman', 'ulasan_buku'];
+    protected $with = ['kategori_buku'];
 
     public function getRouteKeyName()
     {
@@ -27,6 +27,21 @@ class Buku extends Model
     {
         return $this->hasMany(Ulasan_buku::class);
     }
+    public function kategori_buku()
+    {
+        return $this->belongsTo(Kategori_buku::class, 'kategori_buku_id', 'id');
+    }
 
-    
+    public function scopeFilter($query, array $filter)
+    {
+        $query->when($filter['kategori'] ?? false, function ($query, $kategori) {
+            return $query->whereHas('kategori_buku', function ($query) use ($kategori) {
+                $query->where('nama', $kategori);
+            });
+        });
+
+        $query->when($filter['tahun_terbit'] ?? false, function ($query, $tahun_terbit) {
+            return  $query->where('tahun_terbit', $tahun_terbit);
+        });
+    }
 }

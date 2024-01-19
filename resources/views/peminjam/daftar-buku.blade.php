@@ -2,6 +2,31 @@
 @section('content-dashboard')
     <div class="card">
         <div class="card-body pt-3">
+            <div class="mb-3">
+                <p class="card-title">Filter</p>
+                <form class="row" action="{{ route('peminjam.daftar') }}" method="get">
+                    <div class="col-md-3 mb-3 ">
+                        <select class="form-select" aria-label="Default select example" name="kategori">
+                            <option selected>Kategori</option>
+                            @foreach ($kategori as $kategori)
+                            <option value="{{ $kategori->nama }}" {{ (request('kategori') == $kategori->nama) ? 'selected' : '' }}>{{ $kategori->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class=" col-md-4">
+                        <button type="submit" class="btn btn-primary" title="Filter">
+                            <i class="bi bi-filter"></i>
+                        </button>
+                        <button type="reset" class="btn btn-secondary" id="reset-filter" title="reset">
+                            <i class="ri-arrow-go-back-fill"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <hr>
+
+
+
             <!-- Table with stripped rows -->
             <table class="table datatable ">
                 <thead>
@@ -10,7 +35,7 @@
                         <th scope="col">Judul</th>
                         <th scope="col">Penulis</th>
                         <th scope="col">Penerbit</th>
-                        <th scope="col">Tahun Terbit</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -21,7 +46,13 @@
                             <td>{{ $item->judul }}</td>
                             <td>{{ $item->penulis }}</td>
                             <td>{{ $item->penerbit }}</td>
-                            <td>{{ $item->tahun_terbit }}</td>
+                            <td>
+                                @if ($item->peminjaman->contains('buku_id',$item->id))
+                                <h6 class="badge bg-danger">Sedang dipinjam </h6>
+                                @else
+                                <h6 class="badge bg-success">Tersedia </h6>
+                                @endif
+                            </td>
                             <td>
                                 <div class="d-flex gap-3">
                                     <div>
@@ -31,23 +62,24 @@
                                         </a>
                                     </div>
                                     <div>
-                                        @if (!auth()->user()->peminjam->contains('buku_id',$item->id))
-                                             <button class="btn btn-sm btn-success link-light pinjamBukubtn"
-                                            data-buku="{{ $item->slug }}">
-                                            <i class="bi bi-journal-arrow-down"></i>
-                                        </button>
-                                        <form action="{{ route('pinjam-buku.store') }}" method="post" hidden
-                                            class="pinjamBukuForm" data-buku="{{ $item->slug }}">
-                                            @csrf
-                                            <input type="hidden" value="{{ auth()->user()->id }}" name="peminjam">
-                                            <input type="hidden" value="{{ $item->id }}" name="buku">
-                                        </form>
+                                        {{-- @dd($item->peminjaman) --}}
+                                        @if (!$item->peminjaman->contains('buku_id', $item->id))
+                                            <button class="btn btn-sm btn-success link-light pinjamBukubtn"
+                                                data-buku="{{ $item->slug }}">
+                                                <i class="bi bi-journal-arrow-down"></i>
+                                            </button>
+                                            <form action="{{ route('pinjam-buku.store') }}" method="post" hidden
+                                                class="pinjamBukuForm" data-buku="{{ $item->slug }}">
+                                                @csrf
+                                                <input type="hidden" value="{{ auth()->user()->id }}" name="peminjam">
+                                                <input type="hidden" value="{{ $item->id }}" name="buku">
+                                            </form>
                                         @else
-                                        <div class="btn btn-sm btn-danger link-light " title="Sudah dipinjam">
-                                            <i class="bi bi-journal-x"></i>
-                                       </div>
+                                            <div class="btn btn-sm btn-danger link-light " title="Sudah dipinjam">
+                                                <i class="bi bi-journal-x"></i>
+                                            </div>
                                         @endif
-                                       
+
                                     </div>
                                     <div>
                                         <button class="btn btn-sm btn-info link-light" data-bs-toggle="modal"
@@ -59,26 +91,24 @@
                                     </div>
                                     <div>
                                         @if (!auth()->user()->koleksi->contains('buku_id', $item->id))
-                                            
-                                    <form action="{{route('peminjam.koleksi') }}" method="post" 
-                                        class="koleksiBukuForm" data-buku="{{ $item->slug }}">
-                                        @csrf
-                                        <input type="hidden" value="{{ auth()->user()->id }}" name="user">
-                                        <input type="hidden" value="{{ $item->id }}" name="buku">
-                                        <button class="btn btn-sm btn-warning link-light "
-                                        data-buku="{{ $item->slug }}">
-                                        <i class="bi bi-bookmark-fill"></i>
+                                            <form action="{{ route('peminjam.koleksi') }}" method="post"
+                                                class="koleksiBukuForm" data-buku="{{ $item->slug }}">
+                                                @csrf
+                                                <input type="hidden" value="{{ auth()->user()->id }}" name="user">
+                                                <input type="hidden" value="{{ $item->id }}" name="buku">
+                                                <button class="btn btn-sm btn-warning link-light "
+                                                    data-buku="{{ $item->slug }}">
+                                                    <i class="bi bi-bookmark-fill"></i>
 
-                                    </button>
-                                    </form>
-
-                                    @else
-                                    <div class="btn btn-sm btn-success link-light " title="Sudah ditambahkan ke koleksi">
-                                         <i class="bi bi-bookmark-check-fill"></i>
-                                    </div>
-                                   
+                                                </button>
+                                            </form>
+                                        @else
+                                            <div class="btn btn-sm btn-success link-light "
+                                                title="Sudah ditambahkan ke koleksi">
+                                                <i class="bi bi-bookmark-check-fill"></i>
+                                            </div>
                                         @endif
-                                      
+
                                     </div>
 
                                     {{-- end non -admin --}}
@@ -144,7 +174,7 @@
         </div>
     </div>
     {{-- end-modal-create --}}
-
+    
     <script>
         $(document).ready(function() {
             // modal create
@@ -198,6 +228,10 @@
                 });
             })
 
+            $('#reset-filter').click(function() {
+                window.location.href =
+                "{{ route('peminjam.daftar') }}"; // Arahkan ke URL awal tanpa query string
+            });
         })
     </script>
 @endsection

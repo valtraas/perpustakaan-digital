@@ -49,21 +49,20 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <legend class="col-form-label col-sm-2 pt-0">Kategori </legend>
-                    <div class="d-md-flex flex-sm-wrap gap-md-4  col-sm-6">
-                        @foreach ($kategori as $item)
-                            <div class="form-check mb-3 mb-md-0 ">
-                                <input class="form-check-input" type="checkbox" id="gridCheck1" name="kategori[]"
-                                    value="{{ $item->id }}">
-                                <label class="form-check-label" for="gridCheck1">
-                                    {{ $item->nama }}
-                                </label>
-                            </div>
-                        @endforeach
-
+                    <label class="col-sm-2 col-form-label">Kategori <span class="text-danger">*</span></label>
+                    <div class="col-sm-10">
+                        <select class="form-select" aria-label="Default select example" name="kategori">
+                            <option selected>Kategori buku</option>
+                            @foreach ($kategori as $item)
+                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                            @endforeach
+                        </select>
                     </div>
-
+                    @error('kategori')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
+
 
                 <span class="text-danger">*</span> field wajib di isi
         </div>

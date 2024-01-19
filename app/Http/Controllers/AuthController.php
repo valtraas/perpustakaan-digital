@@ -24,11 +24,14 @@ class AuthController extends Controller
             'username' => ['required', 'unique:users,username'],
             'password' => ['required', 'min:8'],
             'alamat' => 'required'
+        ], [
+            'email.unique' => 'Email telah terdaftar',
+            'username.unique' => 'username sudah di gunakan'
         ]);
         $validated['password'] = Hash::make($validated['password']);
         // dd($validated);
         User::create($validated);
-        return redirect()->route('login.index');
+        return redirect()->route('login.index')->with('success', 'Berhasil register silahkan login');
     }
 
 
@@ -51,7 +54,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             return redirect()->route('dashboard.index');
         }
-        return back();
+        return back()->with('error', 'Periksa username dan password');
     }
 
     public function logout(Request $request)

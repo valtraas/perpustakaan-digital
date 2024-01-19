@@ -8,6 +8,7 @@ use App\Models\Kategori_buku_relasi;
 use App\Models\Ulasan_buku;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BukuController extends Controller
 {
@@ -16,9 +17,16 @@ class BukuController extends Controller
      */
     public function index()
     {
+        // dd(request('kategori'));
+        $buku = Buku::all();
+        foreach ($buku as $item) {
+            $tahun_terbit[] = $item->tahun_terbit;
+        }
         return view('buku.buku', [
             'title' => 'Daftar Buku',
-            'buku' => Buku::all()
+            'buku' => Buku::filter(request(['kategori', 'tahun_terbit']))->get(),
+            'kategori' => Kategori_buku::all(),
+            'tahun_terbit' => $tahun_terbit
         ]);
     }
 
@@ -39,11 +47,11 @@ class BukuController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul' => ['required'],
-            'penulis' => 'required',
-            'penerbit' => 'required',
-            'tahun_terbit' => 'required',
-            'cover' => ['image', 'required']
+            'judul' => ['required'], 'penulis' => 'required', 'penerbit' => 'required', 'tahun_terbit' => 'required', 'cover' => ['image', 'required'],
+            'kategori' => 'required'
+        ], [
+            'cover.required' => 'Mohon isikan cover buku',
+            'kategori.required' => 'Mohon isikan kategori buku'
         ]);
         // * membuat slug dari judul
         $slug = $validated['slug'] = Str::slug($validated['judul']);
@@ -55,17 +63,9 @@ class BukuController extends Controller
         }
         $validated['slug'] = $slug;
         $validated['cover'] = $request->file('cover')->store('cover-buku');
-        $buku = Buku::create($validated);
-
-        $kategori = $request->kategori;
-        foreach ($kategori as $kategori_id) {
-            Kategori_buku_relasi::create(
-                [
-                    'buku_id' => $buku->id,
-                    'kategori_id' => $kategori_id
-                ]
-            );
-        }
+        $validated['kategori_buku_id'] = $request->input('kategori');
+        Buku::create($validated);
+        
 
         return redirect()->route('daftar-buku.index')->with('success', 'Berhasil menambah data');
     }
@@ -75,12 +75,12 @@ class BukuController extends Controller
      */
     public function show(Buku $daftar_buku)
     {
+        
         $ulasan = Ulasan_buku::where('buku_id', $daftar_buku->id)->paginate(2);
         return view('buku.detail', [
             'title' => 'Detail Buku',
             'buku' => $daftar_buku,
             'ulasan' => $ulasan,
-            'kategori' => Kategori_buku_relasi::where('buku_id', $daftar_buku->id)->get()
         ]);
     }
 
@@ -89,9 +89,11 @@ class BukuController extends Controller
      */
     public function edit(Buku $daftar_buku)
     {
+       
         return view('buku.edit-buku', [
             'title' => 'Edit Buku',
-            'buku' => $daftar_buku
+            'buku' => $daftar_buku,
+            'kategori' => Kategori_buku::all()
         ]);
     }
 
@@ -100,11 +102,10 @@ class BukuController extends Controller
      */
     public function update(Request $request, Buku $daftar_buku)
     {
-        $validated = $request->validate([
-            'judul' => ['required'],
-            'penulis' => 'required',
-            'penerbit' => 'required',
-            'tahun_terbit' => 'required'
+        $validated = $request->validate(['judul' => ['required'], 'penulis' => 'required', 'penerbit' => 'required', 'tahun_terbit' => 'required',
+            'cover' => ['image', 'required']
+        ], [
+            'cover.required' => 'Mohon isikan cover buku'
         ]);
         if ($daftar_buku->judul !== $validated['judul']) {
 
@@ -116,6 +117,12 @@ class BukuController extends Controller
                 $counter++;
             }
         }
+        if ($daftar_buku->cover) {
+            Storage::delete($daftar_buku->cover);
+        } else {
+            $validated['cover'] = $request->file('cover')->store('cover-buku');
+        }
+
         $validated['slug'] = $slug;
         $daftar_buku->update($validated);
         return redirect()->route('daftar-buku.index')->with('success', 'Berhasil merubah data buku');
@@ -127,6 +134,7 @@ class BukuController extends Controller
     public function destroy(Buku $daftar_buku)
     {
         $daftar_buku->delete();
+        Storage::delete($daftar_buku->cover);
         return back()->with('success', 'Buku berhasil dihapus');
     }
 }

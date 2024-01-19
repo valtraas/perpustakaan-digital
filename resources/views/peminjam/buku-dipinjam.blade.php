@@ -27,8 +27,7 @@
                             <td>
                                 @if ($item->status === 'Belum Dikembalikan')
                                     <h6 class="badge bg-warning">{{ $item->status }} </h6>
-                                @else
-                                    <h6 class="badge bg-success">{{ $item->status }} </h6>
+
                                 @endif
                             </td>
                             <td>
@@ -39,6 +38,7 @@
                                             data-buku='{{ $item->id }}'>
                                             <i class="bi bi-plus"></i>
                                         </button>
+                                        
                                     </div>
                                     <div>
                                         @if (!auth()->user()->koleksi->contains('buku_id', $item->buku->id))
@@ -232,20 +232,24 @@
                 form.attr('action', actionUrl);
 
                 // Definisikan deleteBukuForm di luar event handler
-                const deleteBukuForm = $(`.deleteBukuForm[data-buku="${buku}"]`);
+                console.log(buku);
+                const deleteBukuForm = $(`.deleteBukuForm[data-pinjam="${buku}"]`);
+                console.log(deleteBukuForm);
 
                 $('#submitPengembalian').off('click');
                 $('#submitPengembalian').on('click', function() {
                     $('#PengembalianBuku').off('submit');
-                    // Ulasan terkirim, lanjutkan dengan menghapus buku
-                    // Ulasan terkirim, lanjutkan dengan menghapus buku
+                   
                     $('#PengembalianBuku').submit(); // Submit form
 
                 });
 
                 $('#ModalPengembalian').on('hidden.bs.modal', function() {
                     // Menggantikan 'deleteBukuForm' dengan sesuai dengan kebutuhan Anda
-                    deleteBukuForm.submit();
+                    console.log(deleteBukuForm);
+                    console.log(
+                        deleteBukuForm.submit()
+                    );
                 });
             }
 

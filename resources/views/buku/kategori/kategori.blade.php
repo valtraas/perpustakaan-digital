@@ -26,7 +26,7 @@
                                 <div class="d-flex gap-3">
                                     <div>
                                         <button class="btn btn-sm btn-warning link-light" data-bs-toggle="modal"
-                                            data-bs-target="#ModalKategoriEdit" data-bs-trigger="click" data-slug='{{ $item->slug }}'>
+                                            data-bs-target="#ModalKategoriEdit" data-bs-trigger="click" data-slug='{{ $item->slug }}' data-kategori="{{ $item->nama }}">
                                             <i class='bi bi-pencil-square'></i>
                                         </button>
                                     </div>
@@ -101,7 +101,7 @@
                 <form id="kategoriFormEdit" method="post">
                     @method('PUT')
                     @csrf
-                    <label for="kategori-edit" class="col-sm-2 col-form-label">Nama<span class="text-danger">*</span></label>
+                    <label for="kategori-edit" class="col-sm-2 col-form-label" id="kategoriEdit">Nama<span class="text-danger">*</span></label>
                     <div class="col-sm-10">
                         <input type="text" id="kategori-edit" placeholder="Masukan nama kategori"
                             class="form-control @error('nama') is-invalid @enderror" name="nama" required>
@@ -140,7 +140,9 @@
             $('#ModalKategoriEdit').on('show.bs.modal', function(event) {
                 const button = $(event.relatedTarget);
                 const slug = button.data('slug');
-                console.log(slug);
+                const kategori = button.data('kategori')
+                console.log(kategori);
+                $('#kategori-edit').val(kategori);
                 const form = $(this).find('form#kategoriFormEdit');
                 const actionUrl = `/dashboard-perpustakaan/kategori-buku/${slug}`;
                 form.attr('action', actionUrl);

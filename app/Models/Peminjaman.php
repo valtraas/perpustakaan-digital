@@ -30,11 +30,5 @@ class Peminjaman extends Model
         });
     }
 
-    // public function remove_buku()
-    // {
-    //     $data = Peminjaman::where('tgl_pengembalian', now('Asia/Jakarta')->format('Y-m-d'))->get();
-    //     foreach ($data as $item) {
-    //         $item->delete();
-    //     }
-    // }
+  
 }

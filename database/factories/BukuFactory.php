@@ -24,7 +24,8 @@ class BukuFactory extends Factory
             'penulis' => $this->faker->name(),
             'penerbit' => $this->faker->company(),
             'tahun_terbit' => $this->faker->year(),
-            'cover' => 'cover'
+            'cover' => 'cover',
+            // 'kategori_buku_id' => 1
         ];
     }
 }

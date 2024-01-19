@@ -12,16 +12,17 @@
                         <h6>{{ $buku->penulis }}</h6>
                         <h6>{{ $buku->penerbit }}</h6>
                         <h6>{{ $buku->tahun_terbit }}</h6>
-                        <div class="d-md-flex flex-md-wrap gap-2">
-                            @foreach ($kategori as $item)
-                                <span class="badge bg-secondary">{{ $item->kategori->nama }}</span>
-                            @endforeach
-                        </div>
+                        @if ($buku->kategori_buku_id)
+                        <h6> <span class="badge bg-info">{{ $buku->kategori_buku->nama }}</span>
+                        </h6>
+                        @endif
+
                     </div>
 
-
                 </div>
+                
             </div>
+            <a href="{{ route('daftar-buku.index') }}" class="btn btn-outline-secondary w-25">Kembali</a>
 
         </div>
 
@@ -77,8 +78,7 @@
                             <p class="card-title fs-3 text-center my-5">Belum ada ulasan</p>
                         @endforelse
                     </div>
-
-
+                    {{ $ulasan->links() }}
                 </div>
             </div>
 
@@ -86,26 +86,6 @@
     </div>
     <script>
         $(document).ready(function() {
-            // delete buku
-            // $('.deleteUlasanbtn').click(function() {
-            //     const ulasan = $(this).data('ulasan');
-            //     console.log(ulasan);
-            //     Swal.fire({
-            //         title: 'Anda yakin ?',
-            //         text: 'Anda tidak bisa mengambalikan data ini !',
-            //         icon: 'warning',
-            //         showCancelButton: true,
-            //         confirmButtonColor: '#3085d6',
-            //         cancelButtonColor: '#d33',
-            //         confirmButtonText: 'Ya, hapus!'
-            //     }).then((result) => {
-            //         if (result.isConfirmed) {
-            //             const deleteUlasanForm = $(`.deleteUlasanForm[data-ulasan="${ulasan}"]`);
-            //             // console.log(deleteBukuForm);
-            //             deleteUlasanForm.submit();
-            //         }
-            //     });
-            // })
             $('.deleteUlasanbtn').click(function() {
                 const ulasan = $(this).data('ulasan');
                 Swal.fire({

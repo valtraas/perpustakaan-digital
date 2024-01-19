@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Buku;
 use App\Models\Kategori_buku;
+use App\Models\Koleksi_pribadi;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,11 +13,17 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $buku = Buku::all();
+        $peminjaman = Peminjaman::Where('status', 'Belum Dikembalikan')->get();
+        $buku_tersedia = $buku->count() - $peminjaman->count();
         return view('dashboard.dashmain', [
             'title' => 'Dashboard',
             'buku' => Buku::all(),
             'kategori' => Kategori_buku::all(),
-            'peminjam' => Peminjaman::where('status', 'Belum Dikembalikan')->get()
+            'peminjam' => Peminjaman::where('status', 'Belum Dikembalikan')->get(),
+            'buku_tersedia' => $buku_tersedia,
+            'koleksi' => Koleksi_pribadi::all(),
+            'buku_dipinjam' => Peminjaman::where('user_id', auth()->user()->id)->get()
         ]);
     }
 
