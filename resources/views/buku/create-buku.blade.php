@@ -37,6 +37,13 @@
                     </div>
                 </div>
                 <div class="row mb-3">
+                    <label for="tahun-terbit" class="col-sm-2 col-form-label">Stock <span
+                            class="text-danger">*</span></label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" id="stock" min="0" name="stock" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
                     <label for="inputNumber" class="col-sm-2 col-form-label">Cover Buku <span
                             class="text-danger">*</span></label>
                     <div class="col-sm-10">
@@ -48,20 +55,19 @@
                         @enderror
                     </div>
                 </div>
+
                 <div class="row mb-3">
-                    <legend class="col-form-label col-sm-2 pt-0">Kategori </legend>
-                    <div class="d-md-flex flex-sm-wrap gap-md-4  col-sm-6">
-                        @foreach ($kategori as $item)
-                            <div class="form-check mb-3 mb-md-0 ">
-                                <input class="form-check-input" type="checkbox" id="gridCheck1" name="kategori[]"
-                                    value="{{ $item->id }}">
-                                <label class="form-check-label" for="gridCheck1">
-                                    {{ $item->nama }}
-                                </label>
-                            </div>
-                        @endforeach
+                    <label for="" class="col-sm-2 col-form-label">Kategori</label>
+
+                    <div class="col-sm-10">
+                        <select class=" select2 form-select " name="kategori[]" multiple="multiple" aria-placeholder="kkk">
+                            @foreach ($kategori as $item)
+                                <option value="{{ $item->id }}"> {{ $item->nama }}</option>
+                            @endforeach
+                        </select>
 
                     </div>
+
 
                 </div>
 
@@ -75,5 +81,18 @@
         </form><!-- End Horizontal Form -->
 
     </div>
-    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#stock').on('keyup', function() {
+                let stock = $("#stock").val()
+                if (stock < 0) {
+                    $('#stock').val(0)
+                }
+            });
+
+            $('.select2').select2();
+
+        });
+    </script>
 @endsection

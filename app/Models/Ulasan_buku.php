@@ -18,6 +18,6 @@ class Ulasan_buku extends Model
     }
 
     public function buku(){
-        return $this->belongsTo(Buku::class);
+        return $this->belongsTo(Buku::class, 'buku_id');
     }
 }

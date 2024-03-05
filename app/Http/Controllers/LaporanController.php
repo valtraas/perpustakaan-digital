@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LaporanExport;
 use App\Models\Buku;
+use App\Models\Kategori_buku;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LaporanController extends Controller
 {
@@ -12,9 +15,10 @@ class LaporanController extends Controller
     public function laporan()
     {
         return view('laporan.laporan', [
-            'title' => 'Print data',
+            'title' => 'Print Data',
             'buku' => Buku::all(),
-            'peminjam' => Peminjaman::filters(request(['tgl_peminjaman', 'tgl_pengembalian']))->get()
+            'peminjam' => Peminjaman::all(),
+            'kategori' => Kategori_buku::all()
         ]);
     }
 
@@ -27,5 +31,10 @@ class LaporanController extends Controller
             'belum_dikembalikan' => Peminjaman::filters(request(['tgl_peminjaman', 'tgl_pengembalian']))->where('status', 'Belum Dikembalikan')->get(),
             'dikembalikan' => Peminjaman::filters(request(['tgl_peminjaman', 'tgl_pengembalian']))->where('status', 'Dikembalikan')->get(),
         ]);
+    }
+
+    public function eksport()
+    {
+        return Excel::download(new LaporanExport(), 'laporan.xlsx');
     }
 }

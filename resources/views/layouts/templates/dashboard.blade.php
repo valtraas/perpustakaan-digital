@@ -27,6 +27,7 @@
 
   <!-- Template Main CSS File -->
   <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
 
   <!-- =======================================================
   * Template Name: NiceAdmin
@@ -36,8 +37,13 @@
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
   {{-- script --}}
-  <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+  {{-- <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script> --}}
+  <script src="{{ asset('js/jquery.min.js') }}"></script>
+  <script src="{{ asset('js/select2.min.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
+
 </head>
 
 <body>
@@ -65,7 +71,7 @@
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
-      &copy; Copyright <strong><span>PerDi</span></strong>. All Rights Reserved
+      &copy; Copyright <strong><span>PERDI</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
       <!-- All the links in the footer should remain intact. -->
@@ -90,6 +96,8 @@
   @if (session('success'))
     @include('components.sweetalet', ['message' => session('success')])
 @endif
+
+
 
 
   <!-- Template Main JS File -->

@@ -11,9 +11,11 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Judul</th>
+                        <th scope="col">kategori</th>
                         <th scope="col">Tanggal Pinjam</th>
                         <th scope="col">Tanggal Pengembalian</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">Keterangan</th>
+                        <th scope="col">Penanggung Jawab</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -22,14 +24,28 @@
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $item->buku->judul }}</td>
-                            <td>{{ $item->tgl_peminjaman }}</td>
-                            <td>{{ $item->tgl_pengembalian }}</td>
                             <td>
-                                @if ($item->status === 'Belum Dikembalikan')
-                                    <h6 class="badge bg-warning">{{ $item->status }} </h6>
+                                @foreach ($item->buku->kategori_buku_relasi as $kategori)
+                                    @if ($kategori->kategori->nama)
+                                        <span class="badge bg-secondary">{{ $kategori->kategori->nama }}</span>
+                                    @else
+                                        -
+                                    @endif
+                                @endforeach
+                            </td>
+                            <td>{{ Carbon\Carbon::parse($item->tgl_peminjaman)->translatedFormat('d F Y') }}</td>
+                            <td>{{ Carbon\Carbon::parse($item->tgl_pengembalian)->translatedFormat('d F Y') }}</td>
+                            <td>
+                                @if ($item->keterangan == 'Perpanjangan Disetujui')
+                                    <span class="badge bg-success">{{ $item->keterangan }}</span>
+                                @elseif ($item->keteragan == 'Perpanjangan Ditolak')
+                                    <span class="badge bg-danger">{{ $item->keterangan }}</span>
                                 @else
-                                    <h6 class="badge bg-success">{{ $item->status }} </h6>
+                                    <span class="badge bg-info"> Menunggu Persetujuan</span>
                                 @endif
+                            </td>
+                            <td>
+                                {{ $item->penanggung_jawab }}
                             </td>
                             <td>
                                 <div class="d-flex gap-3">
@@ -61,12 +77,7 @@
                                         @endif
                                     </div>
                                     <div>
-                                        {{-- <button class="btn btn-sm btn-info link-light" data-bs-toggle="modal"
-                                            data-bs-target="#ModalPengembalian" data-bs-trigger="click"
-                                            data-slug='{{ $item->buku->slug }}' data-judul="{{ $item->buku->judul }}"
-                                            data-buku="{{ $item->buku->id }}">
-                                            <i class="ri-arrow-go-back-fill"></i>
-                                        </button> --}}
+
                                         <button class="btn btn-sm btn-danger link-light PengembalianBukuBtn"
                                             data-slug='{{ $item->buku->slug }}' data-judul="{{ $item->buku->judul }}"
                                             data-pinjam="{{ $item->id }}">
@@ -145,8 +156,8 @@
                         <div class="col-sm-10 mb-3">
                             <input type="text" id="judul" class="form-control " disabled>
                         </div>
-                        <label for="rating" class="col-sm-2 col-form-label">Rating<span
-                                class="text-danger">*</span></label>
+
+                        <label for="rating" class="col-sm-2 col-form-label">Rating</label>
                         <div class="col-sm-10 mb-3">
                             <input type="number" min="0" max="5" id="rating"
                                 placeholder="Masukan rating buku 1-5"
@@ -157,8 +168,7 @@
                                 </div>
                             @enderror
                         </div>
-                        <label for="ulasan" class="col-sm-2 col-form-label">Ulasan<span
-                                class="text-danger">*</span></label>
+                        <label for="ulasan" class="col-sm-2 col-form-label">Ulasan</label>
                         <div class="col-sm-10 mb-3">
                             <textarea id="ulasan" class="form-control @error('ulasan') is-invalid @enderror" name="ulasan" required> 
                             </textarea>
@@ -184,11 +194,9 @@
                 const buku = "{!! session('warning') !!}";
                 Swal.fire({
                     title: 'warning !',
-                    html : `<p>Masa peminjaman ${buku} buku telah habis.</p>
-                    <p> Buku akan <span class="text-danger fw-bold">dikembalikan</span>  secara otomatis dalam 1 jam.</p>
+                    html: `<p>Masa peminjaman ${buku} buku telah habis.</p>
                     `,
                     icon: 'info',
-                  
                 });
             @endif
             // pengembalian buku 
@@ -198,13 +206,13 @@
                 const judul = button.data('judul');
 
                 Swal.fire({
-                    title: 'Anda yakin ?',
-                    text: 'Anda tidak bisa mengembalikan data ini !',
+                    title: 'Kembalikan buku ?',
+                    text: `Buku ${judul} akan di kembalikan `,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, hapus!'
+                    confirmButtonText: 'Kembalikan'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Pengembalian(judul, buku)
@@ -232,7 +240,7 @@
                 form.attr('action', actionUrl);
 
                 // Definisikan deleteBukuForm di luar event handler
-                const deleteBukuForm = $(`.deleteBukuForm[data-buku="${buku}"]`);
+                const deleteBukuForm = $(`.deleteBukuForm[data-pinjam="${buku}"]`);
 
                 $('#submitPengembalian').off('click');
                 $('#submitPengembalian').on('click', function() {
@@ -242,12 +250,13 @@
                     $('#PengembalianBuku').submit(); // Submit form
 
                 });
-
                 $('#ModalPengembalian').on('hidden.bs.modal', function() {
                     // Menggantikan 'deleteBukuForm' dengan sesuai dengan kebutuhan Anda
                     deleteBukuForm.submit();
                 });
+
             }
+            
 
 
             // end pengembalian buku 

@@ -26,7 +26,8 @@
                                 <div class="d-flex gap-3">
                                     <div>
                                         <button class="btn btn-sm btn-warning link-light" data-bs-toggle="modal"
-                                            data-bs-target="#ModalKategoriEdit" data-bs-trigger="click" data-slug='{{ $item->slug }}'>
+                                            data-bs-target="#ModalKategoriEdit" data-bs-trigger="click"
+                                            data-slug='{{ $item->slug }}'data-kategori="{{ $item->nama }}">
                                             <i class='bi bi-pencil-square'></i>
                                         </button>
                                     </div>
@@ -90,35 +91,36 @@
     {{-- end-modal-create --}}
     {{-- modal-edit --}}
     <div class="modal fade" id="ModalKategoriEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-    data-bs-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Edit kategori</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="kategoriFormEdit" method="post">
-                    @method('PUT')
-                    @csrf
-                    <label for="kategori-edit" class="col-sm-2 col-form-label">Nama<span class="text-danger">*</span></label>
-                    <div class="col-sm-10">
-                        <input type="text" id="kategori-edit" placeholder="Masukan nama kategori"
-                            class="form-control @error('nama') is-invalid @enderror" name="nama" required>
-                        @error('nama')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="submitKategoriEdit">Simpan</button>
+        data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit kategori</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="kategoriFormEdit" method="post">
+                        @method('PUT')
+                        @csrf
+                        <label for="kategori-edit" class="col-sm-2 col-form-label">Nama<span
+                                class="text-danger">*</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" id="kategori-edit" placeholder="Masukan nama kategori"
+                                class="form-control @error('nama') is-invalid @enderror" name="nama" required>
+                            @error('nama')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="submitKategoriEdit">Simpan</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
     {{-- end-modal-edit --}}
 
     <script>
@@ -140,7 +142,9 @@
             $('#ModalKategoriEdit').on('show.bs.modal', function(event) {
                 const button = $(event.relatedTarget);
                 const slug = button.data('slug');
-                console.log(slug);
+                const kategori = button.data('kategori')
+                console.log(kategori);
+                $('#kategori-edit').val(button.data('kategori'))
                 const form = $(this).find('form#kategoriFormEdit');
                 const actionUrl = `/dashboard-perpustakaan/kategori-buku/${slug}`;
                 form.attr('action', actionUrl);

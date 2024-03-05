@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Buku;
 use App\Models\Kategori_buku_relasi;
-use App\Models\Koleksi_pribadi;
 use App\Models\Peminjaman;
 use App\Models\Ulasan_buku;
 use Carbon\Carbon;
@@ -17,9 +16,22 @@ class PinjamBukuController extends Controller
      */
     public function index()
     {
+        $buku = Buku::all();
+
+        foreach ($buku as $item) {
+            $tersedia = 'Tersedia';
+            foreach ($item->peminjaman as $peminjaman) {
+                if ($peminjaman->status === 'Disetujui') {
+                    $tersedia = 'Disetujui';
+                    break;
+                }
+            }
+            $item->tersedia = $tersedia; // Tambahkan properti baru ke setiap buku
+        }
+
         return view('peminjam.daftar-buku', [
             'title' => 'Daftar Buku',
-            'buku' => Buku::all()
+            'buku' => $buku
         ]);
     }
 
@@ -29,15 +41,13 @@ class PinjamBukuController extends Controller
      */
     public function store(Request $request)
     {
-        $tgl_pinjaman = Carbon::now();
-        $tgl_pengembalian = $tgl_pinjaman->copy()->addDays(7);;
+       
         $data = [
             'user_id' => $request->input('peminjam'),
             'buku_id' => $request->input('buku'),
-            'tgl_peminjaman' => $tgl_pinjaman,
-            'tgl_pengembalian' => $tgl_pengembalian,
-            'status' => 'Belum Dikembalikan'
+            'status' => 'Belum disetujui'
         ];
+       
 
         Peminjaman::create($data);
         return back()->with('success', 'Berhasil meminjam buku');

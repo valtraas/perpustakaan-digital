@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('penulis');
             $table->string('penerbit');
             $table->integer('tahun_terbit');
+            $table->integer('stock');
             $table->string('cover');
             $table->timestamps();
         });

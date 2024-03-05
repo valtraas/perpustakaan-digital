@@ -2,15 +2,19 @@
 @section('content-dashboard')
     <div class="card">
         <div class="card-body pt-3">
+           
+
+
+
             <!-- Table with stripped rows -->
             <table class="table datatable ">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Judul</th>
-                        <th scope="col">Penulis</th>
-                        <th scope="col">Penerbit</th>
-                        <th scope="col">Tahun Terbit</th>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -19,9 +23,27 @@
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $item->judul }}</td>
-                            <td>{{ $item->penulis }}</td>
-                            <td>{{ $item->penerbit }}</td>
-                            <td>{{ $item->tahun_terbit }}</td>
+                            <td>
+                                @foreach ($item->kategori_buku_relasi as $kategori)
+                                @if ($kategori->kategori->nama)
+                                <span class="badge bg-secondary">{{ $kategori->kategori->nama }}</span>
+                                    @else
+                                    -
+                                @endif
+                                @endforeach
+                            </td>
+                            <td>{{ $item->stock }}</td>
+                            <td>
+                                
+                                {{-- @dd($item->peminjaman) --}}
+                                @if ( $item->stock <= 0)
+                                <h6 class="badge bg-danger">Stock habis </h6>
+                              
+                                @else
+
+                                <h6 class="badge bg-success">Tersedia </h6>
+                                @endif
+                            </td>
                             <td>
                                 <div class="d-flex gap-3">
                                     <div>
@@ -31,23 +53,23 @@
                                         </a>
                                     </div>
                                     <div>
-                                        @if (!auth()->user()->peminjam->contains('buku_id',$item->id))
-                                             <button class="btn btn-sm btn-success link-light pinjamBukubtn"
+                                        @if ($item->stock > 0)
+                                        <form action="{{ route('pinjam-buku.store') }}" method="post" 
+                                        class="pinjamBukuForm" data-buku="{{ $item->slug }}">
+                                        @csrf
+                                        <input type="hidden" value="{{ auth()->user()->id }}" name="peminjam">
+                                        <input type="hidden" value="{{ $item->id }}" name="buku">
+                                        <button class="btn btn-sm btn-success link-light pinjamBukubtn"
                                             data-buku="{{ $item->slug }}">
                                             <i class="bi bi-journal-arrow-down"></i>
                                         </button>
-                                        <form action="{{ route('pinjam-buku.store') }}" method="post" hidden
-                                            class="pinjamBukuForm" data-buku="{{ $item->slug }}">
-                                            @csrf
-                                            <input type="hidden" value="{{ auth()->user()->id }}" name="peminjam">
-                                            <input type="hidden" value="{{ $item->id }}" name="buku">
-                                        </form>
+                                            </form>
                                         @else
-                                        <div class="btn btn-sm btn-danger link-light " title="Sudah dipinjam">
-                                            <i class="bi bi-journal-x"></i>
-                                       </div>
+                                            <div class="btn btn-sm btn-danger link-light " title="Sudah dipinjam">
+                                                <i class="bi bi-journal-x"></i>
+                                            </div>
                                         @endif
-                                       
+
                                     </div>
                                     <div>
                                         <button class="btn btn-sm btn-info link-light" data-bs-toggle="modal"
@@ -59,26 +81,24 @@
                                     </div>
                                     <div>
                                         @if (!auth()->user()->koleksi->contains('buku_id', $item->id))
-                                            
-                                    <form action="{{route('peminjam.koleksi') }}" method="post" 
-                                        class="koleksiBukuForm" data-buku="{{ $item->slug }}">
-                                        @csrf
-                                        <input type="hidden" value="{{ auth()->user()->id }}" name="user">
-                                        <input type="hidden" value="{{ $item->id }}" name="buku">
-                                        <button class="btn btn-sm btn-warning link-light "
-                                        data-buku="{{ $item->slug }}">
-                                        <i class="bi bi-bookmark-fill"></i>
+                                            <form action="{{ route('peminjam.koleksi') }}" method="post"
+                                                class="koleksiBukuForm" data-buku="{{ $item->slug }}">
+                                                @csrf
+                                                <input type="hidden" value="{{ auth()->user()->id }}" name="user">
+                                                <input type="hidden" value="{{ $item->id }}" name="buku">
+                                                <button class="btn btn-sm btn-warning link-light "
+                                                    data-buku="{{ $item->slug }}">
+                                                    <i class="bi bi-bookmark-fill"></i>
 
-                                    </button>
-                                    </form>
-
-                                    @else
-                                    <div class="btn btn-sm btn-success link-light " title="Sudah ditambahkan ke koleksi">
-                                         <i class="bi bi-bookmark-check-fill"></i>
-                                    </div>
-                                   
+                                                </button>
+                                            </form>
+                                        @else
+                                            <div class="btn btn-sm btn-success link-light "
+                                                title="Sudah ditambahkan ke koleksi">
+                                                <i class="bi bi-bookmark-check-fill"></i>
+                                            </div>
                                         @endif
-                                      
+
                                     </div>
 
                                     {{-- end non -admin --}}
@@ -144,16 +164,23 @@
         </div>
     </div>
     {{-- end-modal-create --}}
-
+    
     <script>
         $(document).ready(function() {
             // modal create
+            // ambil id modal 
             $('#ModalUlasan').on('show.bs.modal', function(event) {
+                // modal tampil
+                // ketika tampil ambil btn yg di klik 
                 const button = $(event.relatedTarget);
+                // ambil nilai dari data-buku  
                 const buku = button.data('buku')
+                // ambil nilai dari data-judul
                 const judul = button.data('judul')
+                // set value input dengan id buku
                 $('#buku').val(buku)
                 $('#judul').val(judul);
+                // cek apakah rating lebih dari 5 jika lebih maka kembalikan ke 0
                 $('#rating').on('keyup', function() {
                     const rating = $(this).val()
                     const valid = rating >= 0 && rating <= 5;
@@ -161,15 +188,18 @@
                         $(this).val(rating.slice(0, -1))
                     }
                 })
+                // cari form yg idnya Ulasan buku
                 const form = $(this).find('form#UlasanBuku');
+                // set action form 
                 const actionUrl = `/dashboard-perpustakaan/ulas-buku`;
+                // tambahkan action pada form 
                 form.attr('action', actionUrl);
 
 
             });
-
+// ketika btn ulasanBukui klik 
             $('#ulasanBukuSubmit').on('click', function() {
-                // Lakukan sesuatu jika tombol 'Simpan' diklik
+                // maka submit form dengan id ulasanbuku
                 $('#UlasanBuku').submit(); // Submit form
             });
 
@@ -177,26 +207,6 @@
             // end modal create
 
 
-
-            // pinjam buku
-            $('.pinjamBukubtn').click(function() {
-                const buku = $(this).data('buku');
-                Swal.fire({
-                    title: 'Anda yakin ?',
-                    text: 'Buku yang dipinjam harus dikembalikan 7 hari setelah peminjaman !',
-                    icon: 'info',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Pinjam buku'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        const pinjamBukuForm = $(`.pinjamBukuForm[data-buku="${buku}"]`);
-                        console.log(pinjamBukuForm);
-                        pinjamBukuForm.submit();
-                    }
-                });
-            })
 
         })
     </script>

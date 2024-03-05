@@ -23,12 +23,25 @@
           <span>Kategori Buku</span>
         </a>
       </li>
+      @endcan
+      {{-- @can('petugas')
+          
+      @endcan --}}
       <li class="nav-heading">Peminjaman</li>
 
       <li class="nav-item ">
         <a class="{{ request()->routeIs('daftar-peminjam.*') ? 'nav-link' : 'nav-link collapsed'  }} " href="{{ route('daftar-peminjam.index') }}">
           <i class="ri-contacts-book-2-fill"></i>
           <span>Daftar Pinjaman</span>
+        </a>
+      </li>
+      @can('petugas')
+          
+      <li class="nav-item ">
+        <a class="{{ request()->routeIs('daftar-permohonan.*') ? 'nav-link' : 'nav-link collapsed'  }} " href="{{ route('daftar-permohonan.index') }}">
+          <i class="ri-contacts-book-upload-fill"></i> 
+
+          <span>Daftar Permohonan</span>
         </a>
       </li>
       @endcan
@@ -46,6 +59,12 @@
         <a class="{{ request()->routeIs('daftar-buku-pinjaman.*') ? 'nav-link' : 'nav-link collapsed'  }} " href="{{ route('daftar-buku-pinjaman.index') }}">
           <i class="ri-book-read-fill"></i>
           <span>Daftar Buku yang dipinjam</span>
+        </a>
+      </li>
+          <li class="nav-item ">
+        <a class="{{ request()->routeIs('pesan.buku') ? 'nav-link' : 'nav-link collapsed'  }} " href="{{ route('pesan.buku') }}">
+          <i class="bx bxs-alarm"></i> 
+          <span>Permohonan peminjaman buku</span>
         </a>
       </li>
       @endcan
@@ -73,7 +92,7 @@
         </a>
       </li>
       <!-- End Profile Page Nav -->
-      @can('petugas')
+      @can('admin')
            <li class="nav-item">
         <a class="{{ request()->routeIs('user.*') ? 'nav-link' : 'nav-link collapsed'  }} " href="{{ route('user.index') }}">
           <i class="bi bi-people-fill"></i>

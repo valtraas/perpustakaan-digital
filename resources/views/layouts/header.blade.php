@@ -17,7 +17,13 @@
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            @if (auth()->user()->photo)
+            <img src="{{ asset('storage/'.auth()->user()->photo) }}" alt="Profile" class="rounded-circle" width="50" height="50">
+                
+            @else
             <img src="{{ asset('image/profile.png') }}" alt="Profile" class="rounded-circle">
+
+            @endif
 
             <span class="d-none d-md-block dropdown-toggle ps-2">{{ auth()->user()->username }}</span>
           </a><!-- End Profile Iamge Icon -->
@@ -33,7 +39,7 @@
             <li>
               <a class="dropdown-item d-flex align-items-center" href="{{ route('profile.index',['user'=>auth()->user()->username]) }}">
                 <i class="bi bi-person"></i>
-                <span>My Profile</span>
+                <span>Profile</span>
               </a>
             </li>
             <li>
@@ -50,7 +56,7 @@
               @csrf
               <button class="dropdown-item d-flex align-items-center">
                 <i class="bi bi-box-arrow-right"></i>
-                <span>Sign Out</span>
+                <span>Logout</span>
               </button>
             </form>
             </li>

@@ -17,7 +17,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->call(function () {
             Peminjaman::where('tgl_pengembalian', '<=',  now('Asia/Jakarta')->format('Y-m-d'))->delete();
-        })->everyTenSeconds();
+        })->everyFifteenMinutes();
+        // ! php artisan schedule:work 
     }
 
     /**

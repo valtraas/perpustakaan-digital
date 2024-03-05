@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\Admin::class,
         'petugas' => \App\Http\Middleware\Petugas::class,
         'peminjam' => \App\Http\Middleware\Peminjam::class,
+        'adminOrPetugas' => \App\Http\Middleware\AdminOrPetugas::class
     ];
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserManagement extends Controller
 {
@@ -14,12 +16,28 @@ class UserManagement extends Controller
             'user' => User::where('roles_id', '<>', 2)->get(),
         ]);
     }
-    public function update(Request $request, User $user)
+
+    public function create(Request $request)
     {
-        $role = $request->input('role');
-        $user->update([
-            'roles_id' => $role
+        $validate = $request->validate([
+            'nama_lengkap' => ['required'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'username' => ['required', 'unique:users,username'],
+            'password' => 'required',
+            'roles_id' => 'required',
         ]);
-        return back()->with('success', 'Berhasil merubah role user');
+        $validate['password'] = Hash::make($validate['password']);
+        User::create($validate);
+        return redirect()->route('user.index')->with('success', 'Berhasil menambahkan user');
+    }
+
+
+    public function destroy(User $user)
+    {
+        if ($user->photo) {
+            Storage::delete($user->photo);
+        }
+        $user->delete();
+        return back()->with('success', 'Berhasil menghapus user');
     }
 }

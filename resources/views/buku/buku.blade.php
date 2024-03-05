@@ -14,8 +14,8 @@
                         <th scope="col">#</th>
                         <th scope="col">Judul</th>
                         <th scope="col">Penulis</th>
-                        <th scope="col">Penerbit</th>
-                        <th scope="col">Tahun Terbit</th>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Stock</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -25,8 +25,16 @@
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $item->judul }}</td>
                             <td>{{ $item->penulis }}</td>
-                            <td>{{ $item->penerbit }}</td>
-                            <td>{{ $item->tahun_terbit }}</td>
+                            <td>
+                                @foreach ($item->kategori_buku_relasi as $kategori)
+                                @if ($kategori->kategori->nama)
+                                <span class="badge bg-secondary">{{ $kategori->kategori->nama }}</span>
+                                    @else
+                                    -
+                                @endif
+                                @endforeach
+                            </td>
+                            <td>{{ $item->stock }}</td>
                             <td>
                                 <div class="d-flex gap-3">
 

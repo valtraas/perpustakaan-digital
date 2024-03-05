@@ -32,9 +32,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
         ]);
-      
 
-        Buku::factory(10)->create();
+
+        Buku::factory(1)->create();
         // Peminjaman::factory(5)->create();
     }
 }

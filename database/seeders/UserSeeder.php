@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'nama_lengkap' => 'Test User',
+            'nama_lengkap' => $this->faker->name,
             'username' => 'Nepts2',
             'alamat' => 'Test User',
             'email' => 'test1@example.com',

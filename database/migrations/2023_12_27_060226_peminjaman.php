@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained(table: 'users');
             $table->foreignId('buku_id')->constrained(table:'buku');
-            $table->date('tgl_peminjaman');
-            $table->date('tgl_pengembalian');
+            $table->date('tgl_peminjaman')->nullable();
+            $table->date('tgl_pengembalian')->nullable();
             $table->string('status');
+            $table->string('penanggung_jawab')->nullable();
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }

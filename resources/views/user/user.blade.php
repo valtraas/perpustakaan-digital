@@ -1,5 +1,6 @@
 @extends('layouts.templates.dashboard')
 @section('content-dashboard')
+<a href=""></a>
 <div class="card">
     <div class="card-body pt-3">
         <!-- Table with stripped rows -->

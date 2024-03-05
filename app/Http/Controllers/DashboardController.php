@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Buku;
 use App\Models\Kategori_buku;
+use App\Models\Koleksi_pribadi;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,11 +13,15 @@ class DashboardController extends Controller
 {
     public function index()
     {
+      
         return view('dashboard.dashmain', [
             'title' => 'Dashboard',
             'buku' => Buku::all(),
             'kategori' => Kategori_buku::all(),
-            'peminjam' => Peminjaman::where('status', 'Belum Dikembalikan')->get()
+            'peminjam' => Peminjaman::where('status', 'Disetujui')->get(),
+            'buku_tersedia' => Buku::where('stock', '>', '0')->get()->count(),
+            'koleksi' => Koleksi_pribadi::all(),
+            'buku_dipinjam' => Peminjaman::where('user_id', auth()->user()->id)->get()
         ]);
     }
 
@@ -37,6 +42,7 @@ class DashboardController extends Controller
     {
         $data = DB::table('peminjaman')->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as total'))
             ->whereBetween('created_at', [$startdate, $endDate])
+            ->where('status', 'Disetujui')
             ->groupBy('date')->get();
         return $this->formatData($data, $startdate, $endDate);
     }

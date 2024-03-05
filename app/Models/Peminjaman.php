@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,12 +23,21 @@ class Peminjaman extends Model
     }
     public function scopeFilters($query, array $filters)
     {
-        $query->when($filters['tgl_peminjaman'] ?? false, function ($query, $peminjaman) {
-            return $query->whereDate('tgl_peminjaman', $peminjaman);
+
+        $query->when($filters['bulan_pengembalian'] ?? false, function ($query, $pengembalian) {
+            $bulan_pengembalian = Carbon::createFromFormat('Y-m', $pengembalian)->startOfMonth();
+            $bulan = $bulan_pengembalian->month;
+            $tahun = $bulan_pengembalian->year;
+            return $query->whereMonth('tgl_pengembalian', $bulan)->whereYear('tgl_pengembalian', $tahun);
         });
-        $query->when($filters['tgl_pengembalian'] ?? false, function ($query, $pengembalian) {
-            return $query->whereDate('tgl_pengembalian', $pengembalian);
+
+        $query->when($filters['status'] ?? false, function ($query, $status) {
+            return $query->where('status', $status);
         });
+        $query->when($filters['petugas'] ?? false, function ($query, $petugas) {
+            return $query->where('penanggung_jawab', $petugas);
+        });
+
     }
 
     // public function remove_buku()

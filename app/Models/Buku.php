@@ -28,5 +28,27 @@ class Buku extends Model
         return $this->hasMany(Ulasan_buku::class);
     }
 
-    
+    public function kategori()
+    {
+        return $this->belongsToMany(Kategori_buku::class, 'kategori_buku_relasi')->withTimestamps();
+    }
+
+    public function kategori_buku_relasi()
+    {
+        return $this->hasMany(Kategori_buku_relasi::class);
+    }
+
+    public function scopeFilters($query, array $filter)
+    {
+        $query->when($filter['penulis'] ?? false, function ($query, $penulis) {
+            return $query->where('penulis', $penulis);
+        });
+        $query->when($filter['penerbit'] ?? false, function ($query, $penerbit) {
+            return $query->where('penerbit', $penerbit);
+        });
+
+    }
+
+   
+
 }

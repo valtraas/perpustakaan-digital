@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buku;
+use App\Models\Kategori_buku_relasi;
 use App\Models\Koleksi_pribadi;
 use App\Models\Ulasan_buku;
 use Illuminate\Http\Request;
@@ -28,15 +29,14 @@ class KoleksiPribadi extends Controller
         return back()->with('success', 'Berhasil menambahkan ke koleksi');
     }
 
-    public function show($buku)
+    public function show(Buku $daftar_buku)
     {
-        $koleksi_detail = Buku::where('id', $buku)->first();
-        $ulasan = Ulasan_buku::where('buku_id', $buku)->paginate(2);
-
+        $ulasan = Ulasan_buku::where('buku_id', $daftar_buku->id)->paginate(2);
         return view('buku.detail', [
-            'title' => 'Detail buku',
-            'buku' => $koleksi_detail,
-            'ulasan' => $ulasan
+            'title' => 'Detail Buku',
+            'buku' => $daftar_buku,
+            'ulasan' => $ulasan,
+            'kategori' => Kategori_buku_relasi::where('buku_id', $daftar_buku->id)->get()
         ]);
     }
 

@@ -12,6 +12,7 @@
                         <h6>{{ $buku->penulis }}</h6>
                         <h6>{{ $buku->penerbit }}</h6>
                         <h6>{{ $buku->tahun_terbit }}</h6>
+                        <h6>{{ $buku->stock }}</h6>
                         <div class="d-md-flex flex-md-wrap gap-2">
                             @foreach ($kategori as $item)
                                 <span class="badge bg-secondary">{{ $item->kategori->nama }}</span>
@@ -22,6 +23,15 @@
 
                 </div>
             </div>
+            @if (auth()->user()->roles_id === 1 || auth()->user()->roles_id === 2)
+                <a href="{{ route('daftar-buku.index') }}" class="btn btn-outline-secondary ">Kembali</a>
+            @else
+                @if (request()->routeIs('koleksi.detail'))
+                    <a href="{{ route('koleksi.index') }}" class="btn btn-outline-secondary ">Kembali</a>
+                @else
+                    <a href="{{ route('peminjam.daftar') }}" class="btn btn-outline-secondary ">Kembali</a>
+                @endif
+            @endif
 
         </div>
 
@@ -37,8 +47,15 @@
                                 <div class="card info-card rating-card">
                                     <div class="card-body">
                                         <div class="d-flex align-items-center gap-4">
+                                            @if (auth()->user()->photo)
+                                            <img src="{{ asset('storage/'.auth()->user()->photo) }}" alt="Profile" class=""
+                                                width="35" height="35">
+                                                
+                                            @else
                                             <img src="{{ asset('image/smk.png') }}" alt="Profile" class=""
                                                 width="35" height="35">
+                                                
+                                            @endif
                                             <h5 class="card-title">{{ $ulas->users->username }} </h5>
                                             @if ($ulas->users->username === auth()->user()->username)
                                                 <div>
@@ -46,7 +63,8 @@
                                                         data-ulasan="{{ $ulas->id }}">
                                                         <i class="bi bi-trash3"></i>
                                                     </button>
-                                                    <form action="{{ route('delte.ulasan', ['ulasan_buku' => $ulas->id]) }}"
+                                                    <form
+                                                        action="{{ route('delte.ulasan', ['ulasan_buku' => $ulas->id]) }}"
                                                         method="post" hidden class="ulasanForm"
                                                         data-ulasan="{{ $ulas->id }}">
                                                         @csrf
@@ -86,26 +104,7 @@
     </div>
     <script>
         $(document).ready(function() {
-            // delete buku
-            // $('.deleteUlasanbtn').click(function() {
-            //     const ulasan = $(this).data('ulasan');
-            //     console.log(ulasan);
-            //     Swal.fire({
-            //         title: 'Anda yakin ?',
-            //         text: 'Anda tidak bisa mengambalikan data ini !',
-            //         icon: 'warning',
-            //         showCancelButton: true,
-            //         confirmButtonColor: '#3085d6',
-            //         cancelButtonColor: '#d33',
-            //         confirmButtonText: 'Ya, hapus!'
-            //     }).then((result) => {
-            //         if (result.isConfirmed) {
-            //             const deleteUlasanForm = $(`.deleteUlasanForm[data-ulasan="${ulasan}"]`);
-            //             // console.log(deleteBukuForm);
-            //             deleteUlasanForm.submit();
-            //         }
-            //     });
-            // })
+          
             $('.deleteUlasanbtn').click(function() {
                 const ulasan = $(this).data('ulasan');
                 Swal.fire({
