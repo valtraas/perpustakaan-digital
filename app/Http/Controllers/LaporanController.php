@@ -14,9 +14,16 @@ class LaporanController extends Controller
 
     public function laporan()
     {
+        // dd(request('kategori'));
+        session([
+            'penulis' => request('penulis'),
+            'tahun_terbit' => request('tahun_terbit'),
+            'kategori' => request('kategori'),
+
+        ]);
         return view('laporan.laporan', [
             'title' => 'Print Data',
-            'buku' => Buku::all(),
+            'buku' => Buku::Filters(request(['kategori', 'penerbit', 'penulis']))->get(),
             'peminjam' => Peminjaman::all(),
             'kategori' => Kategori_buku::all()
         ]);
@@ -35,6 +42,11 @@ class LaporanController extends Controller
 
     public function eksport()
     {
-        return Excel::download(new LaporanExport(), 'laporan.xlsx');
+        $penulis = session('penulis');
+        $tahun_terbit = session('tahun_terbit');
+        $penerbit = session('penerbit');
+        $kategori = session('kategori');
+        // dd($penulis);
+        return Excel::download(new LaporanExport(penulis: $penulis, tahun_terbit: $tahun_terbit, kategori: $kategori), 'laporan.xlsx');
     }
 }

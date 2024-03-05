@@ -14,7 +14,7 @@
 
         <div class="card-body pt-3">
             <!-- Table with stripped rows -->
-            <form action="{{ route('daftar-permohonan.index') }}" method="GET">
+            <form action="{{ route('laporan.all') }}" method="GET">
                 <div class="d-flex gap-3 justify-content-center mb-3 px-2">
                     <div class="col-md-2">
                         <select class="form-select petugas" name="penulis">
@@ -28,7 +28,7 @@
                         <select class="form-select kategori-filter" name="kategori[]" multiple="multiple">
                             @foreach ($kategori as $item)
                            
-                               <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                               <option value="{{ $item->id }}">{{ $item->nama }}</option>
                            @endforeach
                         </select>
                     </div>

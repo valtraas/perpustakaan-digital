@@ -6,8 +6,9 @@ use App\Models\Buku;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class LaporanExport implements FromCollection, WithHeadings, WithMapping
+class LaporanExport implements WithMultipleSheets
 {
     /**
      * @return \Illuminate\Support\Collection
@@ -23,49 +24,16 @@ class LaporanExport implements FromCollection, WithHeadings, WithMapping
         $this->kategori = $kategori;
     }
 
-    public function headings(): array
+    public function sheets(): array
     {
-        return [
-            'Judul',
-            'Penulis',
-            'Penerbit',
-            'Tahun Terbit',
-            'Stock',
-        ];
-    }
+        $sheets = [];
+        // dd($this->kategori);
+        // Buat sheet pertama
+        $sheets["Buku"] = new BukuSheets($this->penulis, $this->tahun_terbit, $this->kategori);
+        $sheets[] = new PeminjamSheets();
+        // Buat sheet lain jika diperlukan
+        // $sheets[] = new NamaSheet($argumen1, $argumen2);
 
-    public function collection()
-    {
-        $query = Buku::query();
-
-        if ($this->penulis !== null) {
-            $query->where('penulis', $this->penulis);
-        }
-
-        if ($this->tahun_terbit !== null) {
-            $query->where('tahun_terbit', $this->tahun_terbit);
-        }
-        if (!empty($this->kategori)) {
-            $query->whereHas('kategori', function ($query) {
-                $query->where('nama', $query);
-            });
-        }
-        // Jika ketiga variabel kosong, kembalikan semua data
-        if ($this->penulis === null && $this->tahun_terbit === null) {
-            return Buku::all();
-        }
-
-        // Eksekusi query dan kembalikan hasilnya sebagai koleksi
-        return $query->get();
-    }
-    public function map($buku): array
-    {
-        return [
-            $buku->judul,
-            $buku->penulis,
-            $buku->penerbit,
-            $buku->tahun_terbit,
-            $buku->stock
-        ];
+        return $sheets;
     }
 }

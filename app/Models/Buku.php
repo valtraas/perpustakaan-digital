@@ -46,7 +46,12 @@ class Buku extends Model
         $query->when($filter['penerbit'] ?? false, function ($query, $penerbit) {
             return $query->where('penerbit', $penerbit);
         });
-
+        $query->when($filter['kategori'] ?? false, function ($query, $kategori) {
+            return $query->whereHas('kategori_buku_relasi', function ($query) use ($kategori) {
+                $query->whereIn('kategori_buku_id', $kategori);
+            }, '=', count($kategori));
+        });
+        
     }
 
    
